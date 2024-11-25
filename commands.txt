@@ -1,0 +1,29 @@
+#python
+venv\Scripts\activate
+pip install -r requirements.txt
+python main.py
+
+#Docker
+docker build -t ml-orch/main .
+docker push ml-orch/main
+docker run -d --name ml-orch -p 8000:8000 -p 8265:8265 -p 6379:6379 --memory="8g" ml-orch/main
+docker logs -f ml-orch
+
+#Kubernetes
+kubectl create namespace ml-orch
+
+helm repo add ray https://ray-project.github.io/kuberay-helm/
+helm repo update
+helm install kuberay-operator ray/kuberay-operator --namespace ml-orch
+
+kubectl apply -f deployment.yaml
+kubectl apply -f configmap.yaml
+kubectl apply -f horizontal-pod-autoscaler.yaml
+kubectl apply -f ingress.yaml
+kubectl apply -f persistent-volume.yaml
+kubectl apply -f ray-cluster.yaml
+kubectl apply -f service.yaml
+
+kubectl get pods -n ml-orch
+kubectl get services -n ml-orch
+kubectl get hpa -n ml-orch

@@ -1,0 +1,75 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: ml-service
+#   namespace: ml-services
+# spec:
+#   selector:
+#     matchLabels:
+#       app: ml-service
+#   replicas: 3  # Initial number of replicas
+#   template:
+#     metadata:
+#       labels:
+#         app: ml-service
+#     spec:
+#       containers:
+#       - name: ml-service
+#         image: ml-service:latest  # Your Docker image
+#         resources:
+#           limits:
+#             cpu: "4"
+#             memory: "16Gi"
+#             nvidia.com/gpu: "1"  # GPU resource
+#           requests:
+#             cpu: "2"
+#             memory: "8Gi"
+#         ports:
+#         - containerPort: 8000
+#         env:
+#         - name: RAY_ADDRESS
+#           value: "auto"
+#         volumeMounts:
+#         - name: model-cache
+#           mountPath: /app/model-cache
+#       volumes:
+#       - name: model-cache
+#         persistentVolumeClaim:
+#           claimName: model-cache-pvc
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-orch
+  namespace: ml-orch
+spec:
+  selector:
+    matchLabels:
+      app: ml-orch
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: ml-orch
+    spec:
+      containers:
+      - name: ml-orch
+        image: ml-orch/main:latest
+        resources:
+          limits:
+            cpu: "4"
+            memory: "16Gi"
+          requests:
+            cpu: "2"
+            memory: "8Gi"
+        ports:
+        - containerPort: 8000
+        env:
+        - name: RAY_ADDRESS
+          value: "auto"
+        volumeMounts:
+        - name: model-cache
+          mountPath: /app/model-cache
+      volumes:
+      - name: model-cache
+        persistentVolumeClaim:
+          claimName: model-cache-pvc

@@ -1,0 +1,87 @@
+# apiVersion: ray.io/v1
+# kind: RayCluster
+# metadata:
+#   name: ml-service-ray
+#   namespace: ml-services
+# spec:
+#   headGroupSpec:
+#     replicas: 1
+#     rayStartParams:
+#       dashboard-host: "0.0.0.0"
+#       num-cpus: "1"
+#     template:
+#       spec:
+#         containers:
+#         - name: ray-head
+#           image: rayproject/ray:latest
+#           ports:
+#           - containerPort: 6379  # Ray port
+#           - containerPort: 8265  # Ray dashboard
+#           resources:
+#             limits:
+#               cpu: "2"
+#               memory: "4Gi"
+#             requests:
+#               cpu: "1"
+#               memory: "2Gi"
+#   workerGroupSpecs:
+#   - groupName: worker-group-1
+#     replicas: 3
+#     rayStartParams:
+#       num-cpus: "1"
+#     template:
+#       spec:
+#         containers:
+#         - name: ray-worker
+#           image: rayproject/ray:latest
+#           resources:
+#             limits:
+#               cpu: "4"
+#               memory: "8Gi"
+#               nvidia.com/gpu: "1"
+#             requests:
+#               cpu: "2"
+#               memory: "4Gi"
+apiVersion: ray.io/v1
+kind: RayCluster
+metadata:
+  name: ml-orch-ray
+  namespace: ml-orch
+spec:
+  headGroupSpec:
+    serviceType: ClusterIP
+    rayStartParams:
+      dashboard-host: "0.0.0.0"
+      num-cpus: "1"
+    template:
+      spec:
+        containers:
+        - name: ray-head
+          image: rayproject/ray:latest
+          ports:
+          - containerPort: 6379  # Ray port
+          - containerPort: 8265  # Ray dashboard
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+  workerGroupSpecs:
+  - groupName: worker-group-1
+    replicas: 3
+    rayStartParams:
+      num-cpus: "1"
+    template:
+      spec:
+        containers:
+        - name: ray-worker
+          image: rayproject/ray:latest
+          resources:
+            limits:
+              cpu: "4"
+              memory: "8Gi"
+            requests:
+              cpu: "2"
+              memory: "4Gi"

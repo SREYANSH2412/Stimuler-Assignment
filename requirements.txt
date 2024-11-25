@@ -1,0 +1,12 @@
+ray[serve]==2.9.0
+torch==2.1.0
+transformers==4.36.0
+fastapi==0.104.1
+uvicorn==0.24.0
+numpy==1.24.3
+python-multipart==0.0.6
+psutil
+gputil
+kubernetes==28.1.0
+pydantic==1.10.11
+protobuf==3.20.0
