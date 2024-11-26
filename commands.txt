@@ -27,3 +27,14 @@ kubectl apply -f service.yaml
 kubectl get pods -n ml-orch
 kubectl get services -n ml-orch
 kubectl get hpa -n ml-orch
+
+#Docker in backgorund
+screen -dmS ml-orch docker run --name ml-orch -p 8000:8000 -p 8265:8265 -p 6379:6379 --memory="8g" ml-orch/main
+screen -ls
+screen -r ml-orch
+press 'ctrl-A' then press 'D' (or) screen -d ml-orch
+
+#if screen not working
+docker rm -f ml-orch
+
+POST->  https://ea25-13-201-71-59.ngrok-free.app/process
