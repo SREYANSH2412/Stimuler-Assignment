@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "50m"
 spec:
   rules:
-  - host: ml-orch.example.com  # Replace with your domain
+  - host: ml-orch.example.com 
     http:
       paths:
       - path: /

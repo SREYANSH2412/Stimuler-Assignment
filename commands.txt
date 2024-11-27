@@ -37,4 +37,4 @@ press 'ctrl-A' then press 'D' (or) screen -d ml-orch
 #if screen not working
 docker rm -f ml-orch
 
-POST->  https://ea25-13-201-71-59.ngrok-free.app/process
+POST->  http://13.201.71.59:8000/process
