@@ -240,28 +240,29 @@ class ModelPipeline:
 
     async def summarize(self, text: str) -> Dict[str, str]:
         with timer(self.performance_metrics, "bert"):
-            # Tokenize and prepare input
-            inputs = self.bert_tokenizer(
-                text,
-                return_tensors="pt",
-                max_length=512,
-                truncation=True
-            ).to(self.device)
-
-            # Generate summary
+            # Ensure text has at least one sentence
+            sentences = text.split('.')
+            if len(sentences) < 2:
+                return {"summary": text}
+                
+            inputs = self.bert_tokenizer(text, return_tensors="pt", max_length=512, truncation=True)
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
             with torch.no_grad():
                 outputs = self.bert_model(**inputs, output_attentions=True)
-                attention = outputs.attentions[-1].mean(dim=1)
-                scores = attention.mean(dim=-1).squeeze()
-
-            # Extract best sentence
-            sentences = text.split('.')
-            if len(sentences) > 1 and len(scores) > 0:
-                best_idx = min(int(scores.argmax()), len(sentences) - 1)
-                summary = sentences[best_idx].strip()
+                
+            last_attention = outputs.attentions[-1]
+            averaged_attention = last_attention.mean(dim=1)
+            sentence_scores = averaged_attention.mean(dim=-1).squeeze()
+            
+            if len(sentence_scores) > 0:
+                best_sentence_idx = min(int(sentence_scores.argmax()), len(sentences) - 1)
+                summary = sentences[best_sentence_idx].strip()
+                if not summary:
+                    summary = sentences[0].strip()
             else:
                 summary = sentences[0].strip()
-
+                
             return {"summary": summary}
 
     async def analyze_sentiment(self, text: str, model_type: str) -> float:
