@@ -211,10 +211,10 @@ def main():
         # Initialize Ray
         if not ray.is_initialized():
             ray.init(runtime_env={"pip": [
-                "torch>=2.0.0",
-                "transformers>=4.30.0",
-                "fastapi>=0.100.0",
-                "pydantic>=2.0.0"
+                "torch",
+                "transformers",
+                "fastapi",
+                "pydantic"
             ]})
 
         # Start Ray Serve
