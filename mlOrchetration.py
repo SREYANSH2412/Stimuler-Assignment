@@ -408,7 +408,7 @@ def main():
     logger.info("To test the service, send a POST request to http://localhost:8000/process")
     logger.info("To get metrics, send a GET request to http://localhost:8000/metrics")
     logger.info('''Example curl command:
-    curl -X POST "http://localhost:8000/process" -H "Content-Type: application/json" -d "{\\"text\\":\\"Your text here for processing.\\"}"''')
+    curl -X POST "http://localhost:8000/process" -H "Content-Type: application/json" -d "{\\"text\\":\\"Your text here for processing.\\", \\"force_variant\\": \\"A or B\\"}"''')
     
     try:
         while True:
