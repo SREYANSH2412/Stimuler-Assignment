@@ -456,7 +456,7 @@ def main():
         })
     
     # Start Ray Serve
-    serve.start(http_options={"port": 8000})
+    serve.start(http_options={"host": "127.0.0.1", "port": 8000})
     
     # Deploy the application
     deployment = serve.run(ModelPipeline.bind())
